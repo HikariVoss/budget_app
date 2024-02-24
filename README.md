@@ -55,3 +55,13 @@ Look at the example output below very closely and make sure the spacing of the o
         n     
         g     
 ```
+
+## My solution 
+
+### plan
+For this challenge I'm going to use OOP to create object with a methods to deposit money into a category, withdraw money/spend money from a category, as well as a method to transfer money from one category to another
+Finally out side of the class Im going to make a fucntion that takes the object and prints out a bar chart with spending per category
+
+### Goal
+The aim of this challenge is to get better at Object Oriented Programming, which is a weak point of mine
+
