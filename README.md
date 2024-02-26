@@ -87,3 +87,8 @@ print(clothing)
 
 print(create_spend_chart([food, clothing, auto]))
 ```
+
+### Things learned so far
+So far I have learned how to use basic funcitonallity of classes in python, such as making custom methods and magic methods; specifically the `__init__()` and `__str__` methods. Most of the fuctionallity has been added: the only main functionallity I have not started on is the transfer method. 
+Plan for the transfer method
+For the transfer level I will use a total balance on a class level, then transfer money from instance to class and then to the destination instance. 
