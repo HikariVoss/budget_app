@@ -1,32 +1,48 @@
 import math
 
 class Category:
+    total_balance = 0
     def __init__(self, category) -> None:
         self.category = category
         self.transactions = []
         self.balance = 0
-    def __str__(self) -> str:
+    
+    
+    def __str__(self) -> str: 
         self.string = ''
+
         # format title
         self.title_len = len(self.category)
-        self.white_space_left = math.floor((30 - self.title_len) / 2)
-        
-        self.white_space_right = math.ceil((30 - self.title_len) / 2)
-        
-        self.string = f'{self.num_to_char(self.white_space_left, "*")}{self.category}{self.num_to_char(self.white_space_right, "*")}'
-        for i in self.transactions: 
-            pass
+        self.space_left = self.num_to_char(math.floor((30 - self.title_len) / 2), '*')
+        self.space_right = self.num_to_char(math.ceil((30 - self.title_len) / 2), '*')
+        self.string = f'{self.space_left}{self.category}{self.space_right}'
 
+        # format transactions
+        for transaction in self.transactions: 
+            self.amount, self.description = transaction
+            self.amount_len = len(str(self.amount))
+            self.description_len = len(str(self.description))
+            self.white_space = 29 - self.amount_len - self.description_len
+            if self.white_space < 0:
+                self.description = self.description[:self.white_space]
+            self.string += f'\n{self.description}{self.num_to_char(self.white_space, " ")} {self.amount}'
+        
+        # format total
+        self.string += f'\nTotal: {self.balance:.2f}'
         return self.string
+    
     def get_balance(self):
         return self.balance
     
     def deposit(self, amount, description):
         if self.check_balance(amount):
-            self.transactions.append([amount, description])
+            self.balance += amount
+            self.transactions.append([f'{amount:.2f}', description])
     
     def withdraw(self, amount, description = ''):
-        self.transactions.append([-amount, description])
+        if self.check_balance(-amount):
+            self.balance -= amount
+            self.transactions.append([f'{-amount:.2f}', description])
     
     def transfer(self, amount, destination):
         pass
