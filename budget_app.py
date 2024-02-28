@@ -6,7 +6,7 @@ class Category:
         self.category = category
         self.transactions = []
         self.balance = 0
-    
+        self.spending = 0
     
     def __str__(self) -> str: 
         self.string = ''
@@ -35,20 +35,28 @@ class Category:
         return self.balance
     
     def deposit(self, amount, description):
-        if self.check_balance(amount):
-            self.balance += amount
-            self.transactions.append([f'{amount:.2f}', description])
+        self.balance += amount
+        self.transactions.append([f'{amount:.2f}', description])
     
     def withdraw(self, amount, description = ''):
-        if self.check_balance(-amount):
+        if self.check_balance(amount):
             self.balance -= amount
             self.transactions.append([f'{-amount:.2f}', description])
+            self.spending = amount
     
     def transfer(self, amount, destination):
-        pass
-    
+        if self.check_balance(amount):
+            self.balance -= amount
+            self.spending += amount
+            self.transactions.append([f'{-amount:.2f}', f'Transfer to {destination.category}'])
+            destination.recieve_transfer(amount, self.category)
+        
+    def recieve_transfer(self, amount, origin):
+        self.balance += amount
+        self.transactions.append([f'{amount:.2f}', f'Transfer from {origin}'])
+        
     def check_balance(self, amount):
-        if (self.balance + amount) >= 0:
+        if (self.balance - amount) >= 0:
             return True
         else: return False
     
@@ -59,8 +67,49 @@ class Category:
         return self.chars
     
 def create_spend_chart(categories):
-    pass
-
+    total = 0
+    spending = []
+    for category in categories:
+        total += category.spending
+    for cat in categories:
+        percentage = math.floor((cat.spending / total) * 10)
+        spending.append([cat.category, percentage])
+    # spending chart title
+    string = f'Percentage spent by category\n'
+    longest_category = 0
+    for category in spending: 
+        if len(category[0]) > longest_category:
+            longest_category = len(category[0])
+    # spending chart
+    line = 10
+    while line >= 0:
+        chars = f'{line * 10}|'
+        if len(chars) == 2:
+            string += f'  {chars}'
+        elif len(chars) == 3:
+            string += f' {chars}'
+        else: 
+            string += f'{chars}'
+        for category in spending:
+            if category[1] >= line:
+                string += f' o '
+        string += f'\n'
+        line -= 1
+    # divider line
+    string += '    '
+    for category in spending: 
+        string += '---'
+    string += '\n'
+    for i in range(0, longest_category):
+        string += '    '
+        for category in spending:
+            try: 
+                string += f' {category[0][i]} '
+            except: 
+                string += '   '
+        string += '\n'
+        longest_category -= 1
+    return string
 
 food = Category("Food")
 food.deposit(1000, "initial deposit")
